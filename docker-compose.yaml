@@ -1,6 +1,6 @@
 services:
   chato-combourg:
-    image: ghcr.io/r9r-dev/chato-combourg:latest
+    image: git.ronan.love/ronan/chato-combourg:latest
     # Or build locally:
     # build: .
     ports:

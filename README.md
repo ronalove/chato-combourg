@@ -66,7 +66,7 @@ Le modèle YOLO doit être entraîné à partir de vos cartes scannées :
 
 1. Clonez le dépôt :
 ```bash
-git clone https://github.com/r9r-dev/chato-combourg.git
+git clone https://git.ronan.love/ronan/chato-combourg.git
 cd chato-combourg
 ```
 
@@ -89,6 +89,14 @@ docker compose up -d
 4. **Photo du plateau** : Prenez en photo le plateau 3x3 de chaque joueur
 5. **Contrôle** : Corriger les cartes mal identifiées si besoin
 6. **Résultats** : Consultez les scores et le classement final
+
+## Déploiement (cadence)
+
+Dépôt et images sur Gitea : `git.ronan.love/ronan/chato-combourg`. Un push sur `main` déclenche
+Woodpecker (`.woodpecker.yaml`) : build du front, image `latest` vers le registre Gitea, puis
+`docker compose pull && up -d` dans `/home/share/stacks/chato-combourg` sur cadence. Un tag `v*`
+publie en plus une image versionnée. Le stack est `deploy/compose.yaml` ; les variables du worker
+d'inférence (macdaemon sur le Mac mini) sont rendues depuis OpenBao par `deploy/.env.bao`.
 
 ## Documentation
 

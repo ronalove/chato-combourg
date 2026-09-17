@@ -413,6 +413,12 @@ Environment variables in `.env`:
 
 ## Deployment
 
+Source of truth is Gitea (`git.ronan.love/ronan/chato-combourg`). Pushing to `main` runs Woodpecker
+(`.woodpecker.yaml`): frontend build, image `git.ronan.love/ronan/chato-combourg:latest`, then
+`docker compose pull && up -d` in `/home/share/stacks/chato-combourg` on cadence. Tags `v*` also
+publish a versioned image. Stack file: `deploy/compose.yaml`; worker variables come from OpenBao
+(`secret/cadence/chato-combourg`) through `deploy/.env.bao`.
+
 ### Container Volumes
 Required mounts:
 - `/app/models` - YOLO model weights (read-only)

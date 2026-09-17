@@ -1,13 +1,13 @@
-# Frontend build stage
-FROM node:24-alpine AS frontend-builder
+# Frontend build stage (bun, cf. frontend/bun.lock)
+FROM oven/bun:1.3-slim AS frontend-builder
 
 WORKDIR /frontend
 
-COPY frontend/package*.json ./
-RUN npm ci
+COPY frontend/package.json frontend/bun.lock ./
+RUN bun install --frozen-lockfile
 
 COPY frontend/ ./
-RUN npm run build
+RUN bun run build
 
 # Production stage (minimal - deps installed at runtime)
 FROM python:3.12-slim

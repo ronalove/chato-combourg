@@ -1,0 +1,56 @@
+# Stack cadence : /home/share/stacks/chato-combourg/compose.yaml (copie de deploy/compose.yaml).
+# Déployé par Woodpecker (étape deploy) : docker compose pull && up -d dans ce dossier.
+# Les chemins relatifs (models, cards, deps-cache, data) vivent à côté de ce fichier sur cadence.
+services:
+  chato-combourg:
+    container_name: chato-combourg
+    image: git.ronan.love/ronan/chato-combourg:latest
+    # Worker d'inférence : macdaemon sur le Mac mini. Variables rendues depuis OpenBao par bao-compose
+    # (.env.bao -> .env) : PYTORCH_WORKER_URL, PYTORCH_WORKER_TOKEN, PYTORCH_WORKER_TIMEOUT.
+    env_file:
+    - .env
+    environment:
+    - TZ=Europe/Paris
+    restart: unless-stopped
+    volumes:
+    - ./models:/app/models:ro
+    - ./cards:/app/cards:ro
+    - ./deps-cache:/app/deps
+    - ./data:/app/data
+    networks:
+    - cadence
+    labels:
+      pangolin.proxy-resources.chato.name: chato-combourg
+      pangolin.proxy-resources.chato.full-domain: chato.ronan.love
+      pangolin.proxy-resources.chato.protocol: http
+      pangolin.proxy-resources.chato.ssl: true
+      pangolin.proxy-resources.chato.auth.sso-enabled: true
+      pangolin.proxy-resources.chato.auth.sso-roles[0]: ChatoCombo
+      pangolin.proxy-resources.chato.targets[0].method: http
+      pangolin.proxy-resources.chato.targets[0].hostname: chato-combourg
+      pangolin.proxy-resources.chato.targets[0].port: 8080
+      pangolin.proxy-resources.chato.targets[0].healthcheck.enabled: true
+      pangolin.proxy-resources.chato.targets[0].healthcheck.hostname: chato-combourg
+      pangolin.proxy-resources.chato.targets[0].healthcheck.port: 8080
+      pangolin.proxy-resources.chato.targets[0].healthcheck.path: /api/health
+      pangolin.proxy-resources.chato.targets[0].healthcheck.interval: 300
+      pangolin.proxy-resources.chato.targets[0].healthcheck.unhealthy-interval: 10
+      pangolin.proxy-resources.chato.targets[0].healthcheck.timeout: 5
+      pangolin.proxy-resources.chato.rules[0].action: allow
+      pangolin.proxy-resources.chato.rules[0].match: path
+      pangolin.proxy-resources.chato.rules[0].value: /manifest.webmanifest
+      pangolin.proxy-resources.chato.rules[1].action: allow
+      pangolin.proxy-resources.chato.rules[1].match: path
+      pangolin.proxy-resources.chato.rules[1].value: /apple-touch-icon.png
+      pangolin.proxy-resources.chato.rules[2].action: allow
+      pangolin.proxy-resources.chato.rules[2].match: path
+      pangolin.proxy-resources.chato.rules[2].value: /pwa-192x192.png
+      pangolin.proxy-resources.chato.rules[3].action: allow
+      pangolin.proxy-resources.chato.rules[3].match: path
+      pangolin.proxy-resources.chato.rules[3].value: /pwa-512x512.png
+      pangolin.proxy-resources.chato.rules[4].action: allow
+      pangolin.proxy-resources.chato.rules[4].match: path
+      pangolin.proxy-resources.chato.rules[4].value: /assets/*
+networks:
+  cadence:
+    external: true

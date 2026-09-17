@@ -105,7 +105,7 @@ export function License() {
 
           <div className="border-t border-white/10 pt-6">
             <a
-              href="https://github.com/r9r-dev/chato-combourg"
+              href="https://git.ronan.love/ronan/chato-combourg"
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full p-3 bg-dark-lighter rounded-xl text-center text-white/70 hover:bg-dark-card"
